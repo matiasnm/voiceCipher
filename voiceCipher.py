@@ -43,7 +43,11 @@ def voiceCipher(score, measureBreak=None):
         "inwardContraryMotion":     ">",
         "similarMotion": {
             "Direction.ASCENDING":  "↗",
-            "Direction.DESCENDING": "↘"
+            "Direction.DESCENDING": "↘",
+            "1":  "↗",
+            "-1": "↘",
+            1:  "↗",
+            -1: "↘"
         }
     }
 
@@ -210,7 +214,7 @@ def addLyrics(vlq, motionSymbol):
                 return motionSymbol[keyExpresion] + harmonicInterval
             
             # else check the direction of the direct motion
-            direction = str(vlq.hIntervals[0].direction)
+            direction = vlq.hIntervals[0].direction
             return motionSymbol[keyExpresion][direction] + harmonicInterval
 
 
