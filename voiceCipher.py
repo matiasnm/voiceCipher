@@ -177,6 +177,10 @@ def voiceCipher(score, measureBreak=None):
     finalScore.makeNotation(inPlace=True)
     hideVoices(finalScore)
 
+    names = [part.partName for part in score.parts]
+    for part, name in zip(finalScore.parts, names):
+        part.partName = name
+
     # calls layout function
     if measureBreak:
         systemLayout(finalScore, measureBreak)
