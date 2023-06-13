@@ -137,29 +137,32 @@ def voiceCipher(score, measureBreak=None):
                     previousOffset = verticality.offset-verticality.timeToNextEvent
                     previousNote = cipherScoreNotes.getElementsByOffset(previousOffset)
 
-                    # if no previous note is found use vlq[0].v1n2
+                    # if no previous note is found use initial note
                     if previousNote:
                         newNote = note.Note(previousNote[0].pitch) 
                     else:
-                        newNote = note.Note(vlq[0].v1n2.pitch)
+                        newNote = note.Note(cipherScoreNotes[0].pitch)
 
                     # gets note measure and context offset
                     noteMeasure = vlq[0].v1n2.measureNumber
-                    noteOffset = vlq[0].v1n2.offset
-
+                    noteOffset = verticality.offset
+                    
                     # add cipher and adjust duration
                     newNote.lyric = addLyrics(vlq[0], motionSymbol)
                     newNote.duration.quarterLength = float(verticality.timeToNextEvent)
+                    newNote.offset = noteOffset
 
-                    # inserts new note and updates flatten list 'cipherScoreNotes'
-                    cipherScore.parts[0].measure(noteMeasure).insert(noteOffset, newNote)
-                    cipherScoreNotes = cipherScore.flatten().notes                 
+                    # insert into a flatten version of parts[0] to fit offset
+                    cipherScore.parts[0].flatten().insert(noteOffset, newNote)
+
+                    # updates flatten list 'cipherScoreNotes'
+                    cipherScoreNotes = cipherScore.flatten().notes
 
             verticality = verticality.nextVerticality
         # while end
 
         # after the while loop, make notation; mark cipher part as 'hideVoice'
-        cipherScore.makeNotation(inPlace=True)
+        #cipherScore.makeNotation(inPlace=True)
         cipherScore.addGroupForElements('hideVoice',classFilter=(note.Note,note.Rest),recurse=True)
               
         
